@@ -1,17 +1,24 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const path = require('path')
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const { dbUrl } = require('./config/mongodb');
 
+// Iniciando aplicação
 const app = express()
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017/nodedb',
-{useNewUrlParser: true, useUnifiedTopology: true },
-    () => console.log('Mongo connected')
-)
+// Conexão com banco de dados MongoDB
+mongoose.connect(dbUrl,
+    { useNewUrlParser: true, useUnifiedTopology: true},
+    () => console.log('Mongo connected')   
+);
 
-app.use('/files', express.static(path.resolve(__dirname, "..", "tmp", "uploads")))
+// Arquivos estáticos Express
+app.use('/files', express.static(
+    path.resolve(__dirname, "..", "tmp", "uploads")
+));
 
-app.use(require('./routes'))
+// Rotas da aplicação
+app.use(require('./routes'));
 
 module.exports = app;
